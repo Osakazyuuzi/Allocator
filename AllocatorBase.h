@@ -1,68 +1,68 @@
 /////////////////////////////////////////////////////////////////////////
-// ƒtƒ@ƒCƒ‹–¼FAllocator.h
+// ãƒ•ã‚¡ã‚¤ãƒ«åï¼šAllocatorBase.h
 /////////////////////////////////////////////////////////////////////////
-#ifndef ___CORESYSTEM_ALLOCATOR_H___
-#define ___CORESYSTEM_ALLOCATOR_H___
+#ifndef ___CORESYSTEM_ALLOCATORBASE_H___
+#define ___CORESYSTEM_ALLOCATORBASE_H___
 
 /////////////////
-// ƒCƒ“ƒNƒ‹[ƒh //
+// ã‚¤ãƒ³ã‚¯ãƒ«ãƒ¼ãƒ‰ //
 /////////////////
 #include <memory>
 
-class Allocator {
+class AllocatorBase {
 public:
 
 	/*
-	[ŠÖ”ŠT—v]
-	ƒƒ‚ƒŠ‚ðŠm•Û‚·‚é
+	[é–¢æ•°æ¦‚è¦]
+	ãƒ¡ãƒ¢ãƒªã‚’ç¢ºä¿ã™ã‚‹
 
-	[ˆø”]
-	std::size_t		size		ƒoƒCƒg”
-	const char*		typeName	Šm•Û‚·‚éŒ^–¼iƒfƒoƒbƒO—pj
-	const char*		fileName	ŒÄ‚Ño‚µ‚½ƒtƒ@ƒCƒ‹–¼iƒfƒoƒbƒO—pj
-	int				line		ŒÄ‚Ño‚µ‚½s”iƒfƒoƒbƒO—pj
+	[å¼•æ•°]
+	std::size_t		size		ãƒã‚¤ãƒˆæ•°
+	const char*		typeName	ç¢ºä¿ã™ã‚‹åž‹åï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+	const char*		fileName	å‘¼ã³å‡ºã—ãŸãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+	int				line		å‘¼ã³å‡ºã—ãŸè¡Œæ•°ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
 
-	[–ß‚è’l]
-	void*			Šm•Û‚µ‚½ƒƒ‚ƒŠƒuƒƒbƒN‚Ìæ“ª
+	[æˆ»ã‚Šå€¤]
+	void*			ç¢ºä¿ã—ãŸãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã®å…ˆé ­
 	*/
 	virtual void* Allocate(std::size_t size, const char* typeName, const char* fileName, int line) = 0;
 
 	/*
-	[ŠÖ”ŠT—v]
-	ƒƒ‚ƒŠ‚ðŠJ•ú‚·‚é
+	[é–¢æ•°æ¦‚è¦]
+	ãƒ¡ãƒ¢ãƒªã‚’é–‹æ”¾ã™ã‚‹
 
-	[ˆø”]
-	void*			ptr			ŠJ•ú‚·‚éƒƒ‚ƒŠƒ|ƒCƒ“ƒ^
+	[å¼•æ•°]
+	void*			ptr			é–‹æ”¾ã™ã‚‹ãƒ¡ãƒ¢ãƒªãƒã‚¤ãƒ³ã‚¿
 	*/
 	virtual void Deallocate(void* ptr) = 0;
 
 	/*
-	[ŠÖ”ŠT—v]
-	”CˆÓ‚ÌŒ^‚Ì•Ï”‚ðì¬‚µA‚»‚Ìstd::unique_ptr‚ð•Ô‚·
+	[é–¢æ•°æ¦‚è¦]
+	ä»»æ„ã®åž‹ã®å¤‰æ•°ã‚’ä½œæˆã—ã€ãã®std::unique_ptrã‚’è¿”ã™
 
-	[ƒeƒ“ƒvƒŒ[ƒgˆø”]
-	T			Œ^
-	TArgs		ƒRƒ“ƒXƒgƒ‰ƒNƒ^‚Ìˆø”
+	[ãƒ†ãƒ³ãƒ—ãƒ¬ãƒ¼ãƒˆå¼•æ•°]
+	T			åž‹
+	TArgs		ã‚³ãƒ³ã‚¹ãƒˆãƒ©ã‚¯ã‚¿ã®å¼•æ•°
 	
-	[ˆø”]
-	const char*		fileName	ƒtƒ@ƒCƒ‹–¼iƒfƒoƒbƒO—pj
-	int				line		s”iƒfƒoƒbƒO—pj
+	[å¼•æ•°]
+	const char*		fileName	ãƒ•ã‚¡ã‚¤ãƒ«åï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
+	int				line		è¡Œæ•°ï¼ˆãƒ‡ãƒãƒƒã‚°ç”¨ï¼‰
 	*/
 	template <typename T, typename... TArgs>
 	std::unique_ptr<T> Make(const char* fileName, int line, TArgs... args) {
 
-		// Œ^‚ÌƒTƒCƒY•ª‚Ìƒƒ‚ƒŠ—e—Ê‚ðŠm•Û‚µ‚Äƒƒ‚ƒŠƒuƒƒbƒN‚ÌƒAƒhƒŒƒX‚ðƒ|ƒCƒ“ƒ^‚ðŽæ“¾‚·‚é
+		// åž‹ã®ã‚µã‚¤ã‚ºåˆ†ã®ãƒ¡ãƒ¢ãƒªå®¹é‡ã‚’ç¢ºä¿ã—ã¦ãƒ¡ãƒ¢ãƒªãƒ–ãƒ­ãƒƒã‚¯ã®ã‚¢ãƒ‰ãƒ¬ã‚¹ã‚’ãƒã‚¤ãƒ³ã‚¿ã‚’å–å¾—ã™ã‚‹
 		void* memory = Allocate(sizeof(T), typeid(T).name(), fileName, line);
 
-		// ƒƒ‚ƒŠ—e—Ê‚ªŠm•Û‚Å‚«‚È‚©‚Á‚½ê‡
+		// ãƒ¡ãƒ¢ãƒªå®¹é‡ãŒç¢ºä¿ã§ããªã‹ã£ãŸå ´åˆ
 		if (!memory) {
-			// ƒƒ‚ƒŠŠm•ÛŽ¸”sŽž‚Ì—áŠO‚ðƒXƒ[‚·‚é
+			// ãƒ¡ãƒ¢ãƒªç¢ºä¿å¤±æ•—æ™‚ã®ä¾‹å¤–ã‚’ã‚¹ãƒ­ãƒ¼ã™ã‚‹
 			throw std::bad_alloc();
 		}
 
-		// Šm•Û‚µ‚½ƒƒ‚ƒŠ‚ÉƒvƒŒ[ƒXƒƒ“ƒgnew‚Å’¼Ú\’z‚·‚é
+		// ç¢ºä¿ã—ãŸãƒ¡ãƒ¢ãƒªã«ãƒ—ãƒ¬ãƒ¼ã‚¹ãƒ¡ãƒ³ãƒˆnewã§ç›´æŽ¥æ§‹ç¯‰ã™ã‚‹
 		return std::unique_ptr<T>(new(memory) T(std::forward<TArgs>(args)...));
 	}
 };
 
-#endif //!___CORESYSTEM_ALLOCATOR_H___
+#endif //!___CORESYSTEM_ALLOCATORBASE_H___
