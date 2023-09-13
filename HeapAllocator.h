@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // ファイル名：HeapAllocator.h
 /////////////////////////////////////////////////////////////////////////
-#ifndef ___CORESYSTEM_HEAPALLOCATOR_H___
-#define ___CORESYSTEM_HEAPALLOCATOR_H___
+#ifndef ___CORESYSTEM_ALLOCATOR_HEAPALLOCATOR_H___
+#define ___CORESYSTEM_ALLOCATOR_HEAPALLOCATOR_H___
 
 /////////////////
 // インクルード //
@@ -73,4 +73,4 @@ private:
 	std::mutex m_mutex;
 };
 
-#endif //!___CORESYSTEM_HEAPALLOCATOR_H___
+#endif //!___CORESYSTEM_ALLOCATOR_HEAPALLOCATOR_H___
