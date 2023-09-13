@@ -1,8 +1,8 @@
 /////////////////////////////////////////////////////////////////////////
 // ファイル名：AllocatorBase.h
 /////////////////////////////////////////////////////////////////////////
-#ifndef ___CORESYSTEM_ALLOCATORBASE_H___
-#define ___CORESYSTEM_ALLOCATORBASE_H___
+#ifndef ___CORESYSTEM_ALLOCATOR_ALLOCATORBASE_H___
+#define ___CORESYSTEM_ALLOCATOR_ALLOCATORBASE_H___
 
 /////////////////
 // インクルード //
@@ -65,4 +65,4 @@ public:
 	}
 };
 
-#endif //!___CORESYSTEM_ALLOCATORBASE_H___
+#endif //!___CORESYSTEM_ALLOCATOR_ALLOCATORBASE_H___
