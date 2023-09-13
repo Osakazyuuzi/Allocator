@@ -1,16 +1,17 @@
 /////////////////////////////////////////////////////////////////////////
-// �t�@�C�����FHeapAllocator.h
+// ファイル名：HeapAllocator.h
 /////////////////////////////////////////////////////////////////////////
 #ifndef ___CORESYSTEM_HEAPALLOCATOR_H___
 #define ___CORESYSTEM_HEAPALLOCATOR_H___
 
 /////////////////
-// �C���N���[�h //
+// インクルード //
 /////////////////
 #include <iostream>
+#include <mutex>
 
 //////////////////////////
-// �I���W�i���C���N���[�h //
+// オリジナルインクルード //
 //////////////////////////
 #include "AllocatorBase.h"
 
@@ -18,48 +19,58 @@ class HeapAllocator : public AllocatorBase {
 public:
 
 	/*
-	[�֐��T�v]
-	���������m�ۂ���
+	[関数概要]
+	メモリを確保する
 
-	[����]
-	std::size_t		size		�o�C�g��
-	const char*		typeName	�m�ۂ���^���i�f�o�b�O�p�j
-	const char*		fileName	�Ăяo�����t�@�C�����i�f�o�b�O�p�j
-	int				line		�Ăяo�����s���i�f�o�b�O�p�j
+	[引数]
+	std::size_t		size		バイト数
+	const char*		typeName	確保する型名（デバッグ用）
+	const char*		fileName	呼び出したファイル名（デバッグ用）
+	int				line		呼び出した行数（デバッグ用）
 
-	[�߂�l]
-	void*			�m�ۂ����������u���b�N�̐擪
+	[戻り値]
+	void*			確保したメモリブロックの先頭
 	*/
 	void* Allocate(std::size_t size, const char* typeName, const char* fileName, int line) override {
 
-		// size�����������m�ۂ��ăA�h���X���擾����
+		// ミューテックスをロックして1つのスレッドのみからのアクセスに限定する
+		std::lock_guard<std::mutex> lock(m_mutex);
+
+		// size分メモリを確保してアドレスを取得する
 		void* memory = std::malloc(size);
 
-		// �������e�ʂ��m�ۂł��Ȃ������ꍇ
+		// メモリ容量が確保できなかった場合
 		if (!memory) {
-			// �G���[���b�Z�[�W���R���\�[���ɏo�͂���
+			// エラーメッセージをコンソールに出力する
 			std::cerr << "Failed to allocate: "
 				<< "\nType: " << typeName
 				<< "\nFile: " << fileName
 				<< "\nLine: " << line << std::endl;
 			
-			// �������m�ێ��s���̗�O���X���[����
+			// メモリ確保失敗時の例外をスローする
 			throw std::bad_alloc();
 		}
 		return memory;
 	}
 
 	/*
-	[�֐��T�v]
-	���������J������
+	[関数概要]
+	メモリを開放する
 
-	[����]
-	void*			ptr			�J�����郁�����|�C���^
+	[引数]
+	void*			ptr			開放するメモリポインタ
 	*/
 	void Deallocate(void* ptr) override {
-		// ���������J������
+
+		// ミューテックスをロックして1つのスレッドのみからのアクセスに限定する
+		std::lock_guard<std::mutex> lock(m_mutex);
+
+		// メモリを開放する
 		std::free(ptr);
 	}
+
+private:
+	std::mutex m_mutex;
 };
 
 #endif //!___CORESYSTEM_HEAPALLOCATOR_H___
